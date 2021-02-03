@@ -5,31 +5,18 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 
 /**
- * Created by xiaoniu on 2017/7/6.
+ * Created by LeoReny@hypech.com on 2021/2/2.
  */
 
 public class PlayThread extends Thread {
-    public static final int RATE = 44100;
-//    public static final float MAXVOLUME = 100f;
+    //人耳能够感觉到的最高频率为20kaudioFrequency，因此要满足人耳的听觉要求，则需要至少每秒进行40k次采样，
+    // 这个40kHz就是采样率。我们常见的CD音质，采样率为44.1kaudioFrequency。
+    public static final int CD_SAMPLE_RATE = 44100;
 
     AudioTrack mAudioTrack;
     public static boolean ISPLAYSOUND;
 
-    /**
-     * 总长度
-     **/
-    int length;
-    /**
-     * 一个正弦波的长度
-     **/
-    int waveLen;
-    /**
-     * 频率
-     **/
-    int Hz;
-    /**
-     * 正弦波
-     **/
+    int length,  numOfSamplesPerWave,  audioFrequency;
     byte[] wave;
 
     /**
@@ -38,19 +25,16 @@ public class PlayThread extends Thread {
      */
     public PlayThread(int rate) {
         if (rate > 0) {
-            Hz = rate;
-            waveLen = RATE / Hz;
-            length = waveLen * Hz;
-            wave = new byte[RATE];
-            mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, RATE,
+            audioFrequency = rate;                      //sound actual frequency
+            numOfSamplesPerWave = CD_SAMPLE_RATE / audioFrequency;  //number of sample points per full wave
+            length = numOfSamplesPerWave * audioFrequency;
+            wave = new byte[CD_SAMPLE_RATE];
+            mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, CD_SAMPLE_RATE,
                     AudioFormat.CHANNEL_CONFIGURATION_STEREO, // CHANNEL_CONFIGURATION_MONO,
                     AudioFormat.ENCODING_PCM_8BIT, length, AudioTrack.MODE_STREAM);
             ISPLAYSOUND = true;
-            wave = SinWave.sin(wave, waveLen, length);
-        } else {
-            return;
+            wave = SinWave.sin(wave, numOfSamplesPerWave, length);
         }
-
     }
 
     @Override

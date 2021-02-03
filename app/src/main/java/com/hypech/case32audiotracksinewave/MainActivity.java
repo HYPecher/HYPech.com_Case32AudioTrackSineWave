@@ -9,10 +9,7 @@ import android.widget.Button;
 public class MainActivity extends Activity implements View.OnClickListener {
     private PlayThread mPlayThread;
 
-    Button btnPlay;
-    Button btnLeft;
-    Button btnRight;
-    Button btnStop;
+    Button btnPlay, btnLeft, btnRight, btnStop;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,7 +26,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         btnStop.setOnClickListener(this);
 
     }
-
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -73,6 +69,4 @@ public class MainActivity extends Activity implements View.OnClickListener {
         mPlayThread.setChannel(left,right);
         mPlayThread.start();
     }
-
-
 }
